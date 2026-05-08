@@ -120,7 +120,7 @@ function ItemRow({ item, isColour, onDelete, onUpdate }: ItemRowProps) {
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           boxShadow: colour ? `0 0 10px ${colour}66` : undefined,
         }}
-        title={isColour ? undefined : 'Click to change image'}
+        title={isColour ? undefined : 'Click to upload image'}
       >
         {!colour && thumb && <img src={thumb} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />}
         {!colour && !thumb && <span style={{ fontSize: 18 }}>🌸</span>}
@@ -158,14 +158,25 @@ function ItemRow({ item, isColour, onDelete, onUpdate }: ItemRowProps) {
         </span>
       )}
 
-      {/* URL input for image */}
+      {/* Image controls: upload + URL */}
       {!isColour && (
-        <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
+        <div style={{ display: 'flex', gap: 4, alignItems: 'center', flexWrap: 'wrap' }}>
+          <button
+            onClick={() => fileRef.current?.click()}
+            style={{
+              background: 'rgba(255,215,0,0.08)', border: '1px solid rgba(255,215,0,0.35)',
+              borderRadius: 4, padding: '3px 9px', color: GOLD,
+              fontFamily: 'Oswald', fontSize: 11, cursor: 'pointer',
+              display: 'flex', alignItems: 'center', gap: 4, whiteSpace: 'nowrap',
+            }}
+          >
+            📁 Upload
+          </button>
           <input
             value={imgInput} onChange={e => setImgInput(e.target.value)}
-            placeholder="Image URL…"
+            placeholder="or paste URL…"
             style={{
-              width: 120, background: 'rgba(255,215,0,0.04)', border: '1px solid #333',
+              width: 110, background: 'rgba(255,215,0,0.04)', border: '1px solid #333',
               borderRadius: 4, padding: '3px 6px', color: '#aaa',
               fontFamily: 'Oswald', fontSize: 12, outline: 'none',
             }}
@@ -368,9 +379,11 @@ function ReelSection({ reel, onUpdate, onDelete }: ReelSectionProps) {
 interface Props {
   reels: Reel[];
   setReels: (r: Reel[] | ((prev: Reel[]) => Reel[])) => void;
+  machineName: string;
+  setMachineName: (n: string) => void;
 }
 
-export default function EditMode({ reels, setReels }: Props) {
+export default function EditMode({ reels, setReels, machineName, setMachineName }: Props) {
   const [newReelName, setNewReelName] = useState('');
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -425,6 +438,34 @@ export default function EditMode({ reels, setReels }: Props) {
       </div>
 
       <StorageBar />
+
+      {/* Machine name */}
+      <div style={{
+        marginBottom: 24, padding: '14px 18px',
+        background: 'linear-gradient(135deg, #1a1600, #121000)',
+        border: '2px solid rgba(255,215,0,0.3)',
+        borderRadius: 10,
+      }}>
+        <label style={{
+          display: 'block', fontFamily: 'Oswald', fontSize: 11,
+          color: '#888', letterSpacing: 2, textTransform: 'uppercase', marginBottom: 8,
+        }}>
+          Machine Name
+        </label>
+        <input
+          value={machineName}
+          onChange={e => setMachineName(e.target.value)}
+          maxLength={30}
+          placeholder="LUCKY BLOOM"
+          style={{
+            width: '100%', background: 'rgba(255,215,0,0.06)',
+            border: '1px solid rgba(255,215,0,0.4)', borderRadius: 6,
+            padding: '9px 12px', color: GOLD,
+            fontFamily: 'Bebas Neue', fontSize: 22, letterSpacing: 3,
+            outline: 'none',
+          }}
+        />
+      </div>
 
       {/* Reels list */}
       <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>

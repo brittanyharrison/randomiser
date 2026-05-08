@@ -12,6 +12,7 @@ export default function App() {
   const [mode, setMode] = useState<'play' | 'edit'>('play');
   const [reels, setReels] = useLocalStorage<Reel[]>('slot-reels', DEFAULT_REELS);
   const [history, setHistory] = useLocalStorage<SpinEntry[]>('slot-history', []);
+  const [machineName, setMachineName] = useLocalStorage<string>('slot-machine-name', 'LUCKY BLOOM');
   const sound = useSound();
   const [soundOn, setSoundOn] = useState(true);
 
@@ -65,7 +66,7 @@ export default function App() {
             transition={{ duration: 0.35, ease: 'easeInOut' }}
             style={{ position: 'relative', zIndex: 1 }}
           >
-            <PlayMode reels={reels} history={history} onAddHistory={addHistory} sound={sound} />
+            <PlayMode reels={reels} history={history} onAddHistory={addHistory} sound={sound} machineName={machineName} />
           </motion.div>
         ) : (
           <motion.div
@@ -76,7 +77,7 @@ export default function App() {
             transition={{ duration: 0.35, ease: 'easeInOut' }}
             style={{ position: 'relative', zIndex: 1 }}
           >
-            <EditMode reels={reels} setReels={setReels} />
+            <EditMode reels={reels} setReels={setReels} machineName={machineName} setMachineName={setMachineName} />
           </motion.div>
         )}
       </AnimatePresence>
